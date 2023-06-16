@@ -43,7 +43,7 @@ with st.form(key='my_form'):
     heart_disease = st.selectbox('Heart Disease',["Yes", "No"])
     ever_married = st.selectbox('Ever Married',["Yes", "No"])
     work_type = st.selectbox('Work Type', ["Government", "Never worked", "Private", "Self-employed", "children"])
-    Residence_type = st.selectbox('Residence Type', ["Rural", "Urban"])
+    residence_type = st.selectbox('Residence Type', ["Rural", "Urban"])
     avg_glucose_level = st.slider('Average Glucose Level', 80.0, 50.0, 380.0)
     bmi = st.slider('BMI', 24.5 , 15.0, 50.0)
     smoking_status = st.selectbox('Smoking Status', ["smokes", "formerly smoked", "never smoked",  "Unknown"])
@@ -56,7 +56,7 @@ with st.form(key='my_form'):
         'heart_disease': heart_disease,
         'ever_married': ever_married,
         'work_type': work_type,
-        'Residence_type': Residence_type,
+        'Residence_type': residence_type,
         'avg_glucose_level': avg_glucose_level,
         'bmi': bmi,
         'smoking_status': smoking_status
@@ -79,7 +79,7 @@ with st.form(key='my_form'):
         df = df.dropna()
 
         #one-hot encoding for categorical features, create a new dummy feature for each unique value in the nominal feature column
-        df = pd.get_dummies(df[['gender', 'age', 'hypertension','heart_disease', 'ever_married', 'work_type', 'Residence_type', 'avg_glucose_level', 'bmi', 'smoking_status', 'stroke']])
+        df = pd.get_dummies(df[['gender', 'age', 'hypertension','heart_disease', 'ever_married', 'work_type', 'residence_type', 'avg_glucose_level', 'bmi', 'smoking_status', 'stroke']])
 
         #split dataset into training and test datasets
         X = df.drop(['stroke'], axis = 1)
