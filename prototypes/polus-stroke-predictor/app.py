@@ -79,7 +79,7 @@ with st.form(key='my_form'):
         df = df.dropna()
 
         #one-hot encoding for categorical features, create a new dummy feature for each unique value in the nominal feature column
-        df = pd.get_dummies(df[['gender', 'age', 'hypertension','heart_disease', 'ever_married', 'work_type', 'residence_type', 'avg_glucose_level', 'bmi', 'smoking_status', 'stroke']])
+        df = pd.get_dummies(df[['gender', 'age', 'hypertension','heart_disease', 'ever_married', 'work_type', 'Residence_type', 'avg_glucose_level', 'bmi', 'smoking_status', 'stroke']])
 
         #split dataset into training and test datasets
         X = df.drop(['stroke'], axis = 1)
@@ -120,7 +120,7 @@ with st.form(key='my_form'):
         gender_cols = ['gender_Female', 'gender_Male', 'gender_Other']
         ever_married_cols = ['ever_married_No', 'ever_married_Yes']
         work_type_cols = ['work_type_Govt_job',	'work_type_Never_worked', 'work_type_Private', 'work_type_Self-employed', 'work_type_children']
-        Residence_type_cols = ['residence_type_Rural', 'residence_type_Urban']
+        Residence_type_cols = ['Residence_type_Rural', 'Residence_type_Urban']
         smoking_status_cols = ['smoking_status_Unknown', 'smoking_status_formerly smoked', 'smoking_status_never smoked', 'smoking_status_smokes']
 
         cols_lists = [['gender_Female', 'gender_Male', 'gender_Other'],['ever_married_No', 'ever_married_Yes'], ['work_type_Govt_job',	'work_type_Never_worked', 'work_type_Private', 'work_type_Self-employed', 'work_type_children'], ['Residence_type_Rural', 'Residence_type_Urban'],['smoking_status_Unknown', 'smoking_status_formerly smoked', 'smoking_status_never smoked', 'smoking_status_smokes'] ]
