@@ -120,7 +120,7 @@ with st.form(key='my_form'):
         gender_cols = ['gender_Female', 'gender_Male', 'gender_Other']
         ever_married_cols = ['ever_married_No', 'ever_married_Yes']
         work_type_cols = ['work_type_Govt_job',	'work_type_Never_worked', 'work_type_Private', 'work_type_Self-employed', 'work_type_children']
-        Residence_type_cols = ['Residence_type_Rural', 'Residence_type_Urban']
+        Residence_type_cols = ['residence_type_Rural', 'residence_type_Urban']
         smoking_status_cols = ['smoking_status_Unknown', 'smoking_status_formerly smoked', 'smoking_status_never smoked', 'smoking_status_smokes']
 
         cols_lists = [['gender_Female', 'gender_Male', 'gender_Other'],['ever_married_No', 'ever_married_Yes'], ['work_type_Govt_job',	'work_type_Never_worked', 'work_type_Private', 'work_type_Self-employed', 'work_type_children'], ['Residence_type_Rural', 'Residence_type_Urban'],['smoking_status_Unknown', 'smoking_status_formerly smoked', 'smoking_status_never smoked', 'smoking_status_smokes'] ]
