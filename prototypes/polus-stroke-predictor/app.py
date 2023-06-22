@@ -43,7 +43,7 @@ with st.form(key='my_form'):
     heart_disease = st.selectbox('Heart Disease',["Yes", "No"])
     ever_married = st.selectbox('Ever Married',["Yes", "No"])
     work_type = st.selectbox('Work Type', ["Government", "Never worked", "Private", "Self-employed", "children"])
-    Residence_type = st.selectbox('Residence Type', ["Rural", "Urban"])
+    residence_type = st.selectbox('Residence Type', ["Rural", "Urban"])
     avg_glucose_level = st.slider('Average Glucose Level', 80.0, 50.0, 380.0)
     bmi = st.slider('BMI', 24.5 , 15.0, 50.0)
     smoking_status = st.selectbox('Smoking Status', ["smokes", "formerly smoked", "never smoked",  "Unknown"])
@@ -56,7 +56,7 @@ with st.form(key='my_form'):
         'heart_disease': heart_disease,
         'ever_married': ever_married,
         'work_type': work_type,
-        'Residence_type': Residence_type,
+        'Residence_type': residence_type,
         'avg_glucose_level': avg_glucose_level,
         'bmi': bmi,
         'smoking_status': smoking_status
@@ -120,7 +120,7 @@ with st.form(key='my_form'):
         gender_cols = ['gender_Female', 'gender_Male', 'gender_Other']
         ever_married_cols = ['ever_married_No', 'ever_married_Yes']
         work_type_cols = ['work_type_Govt_job',	'work_type_Never_worked', 'work_type_Private', 'work_type_Self-employed', 'work_type_children']
-        Residence_type_cols = ['Residence_type_Rural', 'Residence_type_Urban']
+        residence_type_cols = ['Residence_type_Rural', 'Residence_type_Urban']
         smoking_status_cols = ['smoking_status_Unknown', 'smoking_status_formerly smoked', 'smoking_status_never smoked', 'smoking_status_smokes']
 
         cols_lists = [['gender_Female', 'gender_Male', 'gender_Other'],['ever_married_No', 'ever_married_Yes'], ['work_type_Govt_job',	'work_type_Never_worked', 'work_type_Private', 'work_type_Self-employed', 'work_type_children'], ['Residence_type_Rural', 'Residence_type_Urban'],['smoking_status_Unknown', 'smoking_status_formerly smoked', 'smoking_status_never smoked', 'smoking_status_smokes'] ]
