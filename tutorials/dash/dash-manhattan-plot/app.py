@@ -1,8 +1,8 @@
 import pandas as pd
-import dash
+from flask import Flask
 from dash.dependencies import Input, Output
+from dash import Dash, html, dcc
 import dash_bio as dashbio
-from dash import html, dcc
 from dash import dash_table
 from dash.dash_table.Format import Group
 from Bio import Entrez
@@ -16,7 +16,8 @@ def parse(string):
     return snp, gene 
 
 def get_ncbi_sum(gene_name):
-    Entrez.email = " please provide your email here "
+    user = os.environ.get('JUPYTERHUB_USER')
+    email = user + "@gmail.com"
     handle = Entrez.esearch(db="gene", term=f'{gene_name}[Gene Name] AND "Homo sapiens"[Organism]', retmax=1)
     record = Entrez.read(handle)
     if not record["IdList"]:
@@ -77,7 +78,8 @@ def get_table(data):
     return table 
 
 
-app = dash.Dash(__name__)
+server = Flask(__name__)
+app = Dash(server=server)
 
 df = pd.read_csv('manhattan_data.csv')
 
