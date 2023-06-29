@@ -8,7 +8,16 @@ from dash import dash_table
 from dash.dash_table.Format import Group
 from Bio import Entrez
 from xml.etree import ElementTree as ET
+import re 
 
+
+def verify_email(user_email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'         
+    if user_email and re.match(pattern, user_email):
+        entrez_email = user_email 
+    else:
+        entrez_email = 'user@nih.gov'
+    return entrez_email
 
 def parse(string):
     parts = string.split('<br>')
@@ -17,8 +26,12 @@ def parse(string):
     return snp, gene 
 
 def get_ncbi_sum(gene_name):
-    user = os.environ.get('JUPYTERHUB_USER')
-    email = user + "@gmail.com"
+
+    user_email = os.environ.get('JUPYTERHUB_USER')
+
+    entrez_email = verify_email(user_email)
+
+    Entrez.email = entrez_email
     handle = Entrez.esearch(db="gene", term=f'{gene_name}[Gene Name] AND "Homo sapiens"[Organism]', retmax=1)
     record = Entrez.read(handle)
     if not record["IdList"]:
