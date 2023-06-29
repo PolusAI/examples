@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from flask import Flask
 from dash.dependencies import Input, Output
@@ -7,7 +8,6 @@ from dash import dash_table
 from dash.dash_table.Format import Group
 from Bio import Entrez
 from xml.etree import ElementTree as ET
-import os
 
 
 def parse(string):
