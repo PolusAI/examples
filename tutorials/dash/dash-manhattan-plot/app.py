@@ -7,6 +7,7 @@ from dash import dash_table
 from dash.dash_table.Format import Group
 from Bio import Entrez
 from xml.etree import ElementTree as ET
+import os
 
 
 def parse(string):
