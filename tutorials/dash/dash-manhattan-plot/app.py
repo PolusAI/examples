@@ -29,10 +29,7 @@ def parse(string):
 
 def get_ncbi_sum(gene_name):
     user_email = os.environ.get("JUPYTERHUB_USER")
-
-    entrez_email = verify_email(user_email)
-
-    Entrez.email = entrez_email
+    Entrez.email = verify_email(user_email)
     handle = Entrez.esearch(
         db="gene", term=f'{gene_name}[Gene Name] AND "Homo sapiens"[Organism]', retmax=1
     )
