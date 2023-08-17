@@ -1,3 +1,5 @@
+library(shiny)
+
 # Global variables can go here
 n <- 200
 
@@ -18,5 +20,6 @@ server <- function(input, output) {
 
 # Return a Shiny app object
 shinyApp(ui = ui, server = server)
+
 
 

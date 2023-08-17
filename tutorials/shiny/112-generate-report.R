@@ -1,9 +1,12 @@
-shinyApp(
-  ui = fluidPage(
+library(shiny)
+
+
+ui <- fluidPage(
     sliderInput("slider", "Slider", 1, 100, 50),
     downloadButton("report", "Generate report")
-  ),
-  server = function(input, output) {
+  )
+ 
+server <- function(input, output) {
     output$report <- downloadHandler(
       # For PDF output, change this to "report.pdf"
       filename = "report.html",
@@ -26,7 +29,12 @@ shinyApp(
         )
       }
     )
-  }
-)
+}
+
+
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
+
 
 

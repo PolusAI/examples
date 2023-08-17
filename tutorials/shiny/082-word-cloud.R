@@ -5,8 +5,9 @@
 #  http://www.gutenberg.org/cache/epub/2243/pg2243.txt
 # Romeo and Juliet:
 #  http://www.gutenberg.org/cache/epub/1112/pg1112.txt
+library(shiny)
 
-function(input, output, session) {
+server <- function(input, output, session) {
   # Define a reactive expression for the document term matrix
   terms <- reactive({
     # Change when the "update" button is pressed...
@@ -32,7 +33,7 @@ function(input, output, session) {
 }
 
 
-fluidPage(
+ui <- fluidPage(
   # Application title
   titlePanel("Word Cloud"),
 
@@ -58,4 +59,6 @@ fluidPage(
   )
 )
 
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 

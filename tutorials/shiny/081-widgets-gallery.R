@@ -1,4 +1,6 @@
-function(input, output) {
+library(shiny)
+
+server <- function(input, output) {
 
   output$actionOut <- renderPrint({ input$action })
   output$checkboxOut <- renderPrint({ input$checkbox })
@@ -17,7 +19,7 @@ function(input, output) {
 }
 
 
-fluidPage(
+ui <- fluidPage(
   
   tags$head(tags$style(HTML("
     .shiny-text-output {
@@ -191,5 +193,8 @@ fluidPage(
   )
 
 )
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 
 

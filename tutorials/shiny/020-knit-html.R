@@ -1,6 +1,8 @@
 # This example shows you how to knit an R Markdown document using the two packages **knitr** and **markdown**, and include the HTML output in a shiny app. Note we are using [R Markdown v1](http://rmarkdown.rstudio.com/authoring_migrating_from_v1.html) here, which has a couple of differences with [v2](http://rmarkdown.rstudio.com). The basic idea is to call `knitr::knit2html()` with the argument `fragment.only = TRUE` to generate a fragment of HTML code.
 # 
 
+library(shiny)
+
 # Workaround for https://github.com/yihui/knitr/issues/1538
 if (packageVersion("knitr") < "1.17.3") {
   if (getRversion() > "3.4.0") {
@@ -12,7 +14,7 @@ if (packageVersion("knitr") < "1.17.3") {
   }
 }
 
-function(input, output) {
+server <- function(input, output) {
 
   regFormula <- reactive({
     as.formula(paste('mpg ~', input$x))
@@ -41,7 +43,7 @@ function(input, output) {
 }
 
 
-fluidPage(
+ui <- fluidPage(
   title = 'Embed an HTML report from R Markdown/knitr',
   sidebarLayout(
     sidebarPanel(
@@ -55,4 +57,5 @@ fluidPage(
   )
 )
 
-
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)

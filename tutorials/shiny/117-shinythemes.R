@@ -1,5 +1,6 @@
-shinyApp(
-  ui = tagList(
+library(shiny)
+
+ui <- tagList(
     shinythemes::themeSelector(),
     navbarPage(
       # theme = "cerulean",  # <--- To use a theme, uncomment this
@@ -36,8 +37,9 @@ shinyApp(
       tabPanel("Navbar 2", "This panel is intentionally left blank"),
       tabPanel("Navbar 3", "This panel is intentionally left blank")
     )
-  ),
-  server = function(input, output) {
+  )
+
+server <- function(input, output) {
     output$txtout <- renderText({
       paste(input$txt, input$slider, format(input$date), sep = ", ")
     })
@@ -45,6 +47,9 @@ shinyApp(
       head(cars, 4)
     })
   }
-)
+
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 
 
