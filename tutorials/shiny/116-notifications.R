@@ -1,5 +1,6 @@
-shinyApp(
-  ui = fluidPage(
+library(shiny)
+
+ui <- fluidPage(
     textInput("txt", "Content", "Text of message"),
     radioButtons("duration", "Seconds before fading out",
       choices = c("2", "5", "10", "Never"),
@@ -12,8 +13,9 @@ shinyApp(
     checkboxInput("close", "Close button?", TRUE),
     actionButton("show", "Show"),
     actionButton("remove", "Remove most recent")
-  ),
-  server = function(input, output) {
+  )
+
+server <- function(input, output) {
     id <- NULL
 
     observeEvent(input$show, {
@@ -37,6 +39,9 @@ shinyApp(
       removeNotification(req(id))
     })
   }
-)
+
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 
 

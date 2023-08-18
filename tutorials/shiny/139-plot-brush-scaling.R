@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 library(scales)
-library(png)
+library(png) 
 
 # Data set with points on a grid
 grid_data <- data.frame(

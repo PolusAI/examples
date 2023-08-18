@@ -1,4 +1,6 @@
-function(input, output) {
+library(shiny)
+
+server <- function(input, output) {
 
   # You can access the value of the widget with input$slider1, e.g.
   output$value <- renderPrint({ input$slider1 })
@@ -8,7 +10,7 @@ function(input, output) {
 }
 
 
-fluidPage(
+ui <- fluidPage(
   fluidRow(
     column(4,
       
@@ -32,5 +34,8 @@ fluidPage(
   )
   
 )
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 
 

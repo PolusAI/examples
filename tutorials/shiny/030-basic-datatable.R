@@ -1,8 +1,9 @@
 # Load the ggplot2 package which provides
 # the 'mpg' dataset.
+library(shiny)
 library(ggplot2)
 
-function(input, output) {
+server <- function(input, output) {
 
   # Filter data based on selections
   output$table <- DT::renderDataTable(DT::datatable({
@@ -26,7 +27,7 @@ function(input, output) {
 # the 'mpg' dataset.
 library(ggplot2)
 
-fluidPage(
+ui <- fluidPage(
   titlePanel("Basic DataTable"),
 
   # Create a new Row in the UI for selectInputs
@@ -54,5 +55,7 @@ fluidPage(
   DT::dataTableOutput("table")
 )
 
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 
 

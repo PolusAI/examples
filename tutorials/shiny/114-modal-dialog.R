@@ -1,8 +1,10 @@
-shinyApp(
-  ui = basicPage(
+library(shiny)
+
+ui <- basicPage(
     actionButton("show", "Show modal dialog")
-  ),
-  server = function(input, output) {
+  )
+  
+server <- function(input, output) {
     observeEvent(input$show, {
       showModal(modalDialog(
         title = "Important message",
@@ -11,6 +13,8 @@ shinyApp(
       ))
     })
   }
-)
 
 
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
