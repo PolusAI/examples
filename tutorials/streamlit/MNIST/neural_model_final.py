@@ -185,7 +185,7 @@ def accuracy(y_pred, y_true):
 
 
 # Stochastic gradient descent optimizer.
-optimizer = tf.optimizers.Adam(learning_rate=0.001)
+optimizer = tf.optimizers.Adam(learning_rate)
 # Optimization process.
 
 def run_optimization(x, y):
@@ -217,7 +217,7 @@ st.markdown(
 
 
 @st.cache_resource
-def train_model(training_steps, display_step, batch_size):
+def train_model(training_steps, display_step, learning_rate, batch_size):
     step_list = []
     loss_list = []
     acc_list = []
@@ -238,7 +238,7 @@ def train_model(training_steps, display_step, batch_size):
 
 
 step_list, loss_list, acc_list, neural_net = train_model(
-    training_steps, display_step, batch_size)
+    training_steps, display_step, learning_rate, batch_size)
 
 
 
