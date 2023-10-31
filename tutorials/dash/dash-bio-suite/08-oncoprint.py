@@ -3,17 +3,22 @@ import urllib.request as urlreq
 from dash import Dash, html, Input, Output, callback
 import dash_bio as dashbio
 from flask import Flask
+import os 
 
 server = Flask(__name__)
 app = Dash(server=server)
 
 
+# To retrieve data from original source, uncomment 
+# data = urlreq.urlopen(
+#     'https://git.io/oncoprint_dataset3.json'
+# ).read().decode('utf-8')
+# data = json.loads(data)
 
-data = urlreq.urlopen(
-    'https://git.io/oncoprint_dataset3.json'
-).read().decode('utf-8')
-
-data = json.loads(data)
+dir_name = os.path.dirname(__file__)
+data_path = dir_name + '/data/oncoprint_dataset3.json'
+with open(data_path, 'r') as data:
+    data = json.load(data)
 
 app.layout = html.Div([
     dashbio.OncoPrint(

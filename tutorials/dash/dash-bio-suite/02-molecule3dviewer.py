@@ -2,13 +2,16 @@ import dash_bio as dashbio
 from dash import Dash, html, Input, Output, callback
 from dash_bio.utils import PdbParser, create_mol3d_style
 from flask import Flask
+import os 
 
 server = Flask(__name__)
 app = Dash(server=server)
 
+# To retrieve data from original source, uncomment 
+# parser = PdbParser('https://git.io/4K8X.pdb')
 
-parser = PdbParser('https://git.io/4K8X.pdb')
-
+dir_name = os.path.dirname(__file__)
+parser = PdbParser(dir_name + "/data/4K8X.pdb.txt")
 data = parser.mol3d_data()
 styles = create_mol3d_style(
     data['atoms'], visualization_type='cartoon', color_element='residue'

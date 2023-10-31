@@ -2,12 +2,16 @@ import pandas as pd
 from dash import Dash, html, dcc, Input, Output, callback
 import dash_bio as dashbio
 from flask import Flask
+import os 
 
 server = Flask(__name__)
 app = Dash(server=server)
 
+# To retrieve data from original source, uncomment 
+# df = pd.read_csv('https://git.io/manhattan_data.csv')
 
-df = pd.read_csv('https://git.io/manhattan_data.csv')
+dir_name = os.path.dirname(__file__)
+df = pd.read_csv(dir_name + '/data/manhattan_data.csv')
 
 app.layout = html.Div([
     'Threshold value',

@@ -6,8 +6,10 @@ from flask import Flask
 server = Flask(__name__)
 app = Dash(server=server)
 
+# To retrieve data from original source, uncomment 
+# df = pd.read_csv('https://git.io/clustergram_brain_cancer.csv').set_index('ID_REF')
 
-df = pd.read_csv('https://git.io/clustergram_brain_cancer.csv').set_index('ID_REF')
+df = pd.read_csv('/Users/aditi.patel/Desktop/GitHub/examples/tutorials/dash/dash-bio-suite/data/clustergram_brain_cancer.csv').set_index('ID_REF')
 
 columns = list(df.columns.values)
 rows = list(df.index)

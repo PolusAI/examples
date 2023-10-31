@@ -3,16 +3,22 @@ import urllib.request as urlreq
 from dash import Dash, html, dcc, Input, Output, State, callback
 import dash_bio as dashbio
 from flask import Flask
+import os 
 
 server = Flask(__name__)
 app = Dash(server=server)
 
+# To retrieve data from original source, uncomment 
+# data = urlreq.urlopen(
+#     "https://git.io/circos_graph_data.json"
+# ).read().decode("utf-8")
+# circos_graph_data = json.loads(data)
 
-data = urlreq.urlopen(
-    "https://git.io/circos_graph_data.json"
-).read().decode("utf-8")
+dir_name = os.path.dirname(__file__)
+data_path = dir_name + "/data/circos_graph_data.json"
+with open(data_path, 'r') as data:
+    circos_graph_data = json.load(data)
 
-circos_graph_data = json.loads(data)
 
 app.layout = html.Div(
     [

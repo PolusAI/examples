@@ -3,16 +3,21 @@ import urllib.request as urlreq
 from dash import Dash, html, Input, Output, callback
 import dash_bio as dashbio
 from flask import Flask
+import os 
 
 server = Flask(__name__)
 app = Dash(server=server)
 
+# To retrieve data from original source, uncomment 
+# model_data = urlreq.urlopen(
+#     'https://git.io/mol2d_buckminsterfullerene.json'
+# ).read().decode('utf-8')
+# model_data = json.load(model_data)
+dir_name = os.path.dirname(__file__)
+model_data_path = dir_name + '/data/mol2d_buckminsterfullerene.json'
 
-model_data = urlreq.urlopen(
-    'https://git.io/mol2d_buckminsterfullerene.json'
-).read().decode('utf-8')
-
-model_data = json.loads(model_data)
+with open(model_data_path, 'r') as model_data:
+    model_data = json.load(model_data)
 
 app.layout = html.Div([
     dashbio.Molecule2dViewer(
