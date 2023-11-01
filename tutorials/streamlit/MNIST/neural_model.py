@@ -64,7 +64,15 @@ batch_size = 256
 # Form Streamlit Input
 
 st.subheader('Training:')
+st.markdown(
+"""
+MNIST default dataset parameters.
 
+**Number of classes** = 10 (total classes 0-9 digits).
+
+**Number of features** = 784  (data features).
+"""
+)
 
 # Initialize shuffle_button_state
 shuffle_button_state = st.session_state.get('shuffle_button_state', False)
@@ -81,13 +89,24 @@ if "learning" not in st.session_state:
 if "batch" not in st.session_state:
     st.session_state.batch = batch_size
 
+st.markdown('----')
+
 placeholder1 = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
 placeholder4 = st.empty()
 
+col1, col2, col3 = st.columns([6,1,1])
+
+with col2:
+    reset_button_state = st.button('Reset')
+with col3:
+    apply_button_state = st.button('Apply', type="primary")
+
+st.markdown('----')
+
 # Resetting the parameters
-if st.button('Reset'):
+if reset_button_state:
     st.session_state.training = training_steps
     st.session_state.display = display_step
     st.session_state.learning = learning_rate
@@ -104,22 +123,9 @@ placeholder4.number_input(
     label='Batch Size: ', key='batch', step = 1)
 
 # Apply button
-if not st.button("Apply"):
+if not apply_button_state:
     if not shuffle_button_state:
         st.stop()
-
-# Below is markdown for Streamlit.
-st.markdown(
-    """
-
-MNIST default dataset parameters.
-
-**Number of classes** = 10 (total classes 0-9 digits).
-
-**Number of features** = 784  (data features).
-
-    """
-)
 
 
 # Network parameters.
@@ -205,17 +211,6 @@ def run_optimization(x, y):
 
     # Update W and b following gradients.
     optimizer.apply_gradients(zip(gradients, trainable_variables))
-
-
-# Run training for the given number of steps.
-st.markdown(
-    """
-
-    **_The results below are for the training that was ran for the given number of steps._**
-
-    """, unsafe_allow_html=True)
-
-
 
 @st.cache_resource
 def train_model(training_steps, display_step, learning_rate, batch_size):
