@@ -1,5 +1,4 @@
 # For Streamlit:
-#%%
 from __future__ import absolute_import, division, print_function
 import random
 import numpy as np
@@ -173,7 +172,7 @@ class NeuralNet(Model):
 # Build neural network model.
 neural_net = NeuralNet()
 # Cross-Entropy Loss.
-# Note that this will apply 'softmax' to thwe logits.
+# Note that this will apply 'softmax' to the logits.
 
 def cross_entropy_loss(x, y):
     # Convert labels to int 64 for tf cross-entropy function.
@@ -296,12 +295,6 @@ if (not hasattr(st.session_state, 'test_images')):
 
 predictions = neural_net(st.session_state.test_images)
 
-# # Display image and model prediction.
-# columns = st.columns(n_images)
-# for i, col in enumerate(columns):
-#     col.image(np.reshape(st.session_state.test_images[i], [28, 28]) / 255., caption=st.session_state.test_labels[i])
-#     col.write("**Prediction:** %i" % np.argmax(predictions.numpy()[i]))
-
 columns = st.columns(n_images+1)
 columns[0].write("**Image:**")
 columns[0].write("**Label:**")
@@ -355,12 +348,8 @@ if (
     # Convert PIL image to to grayscale using 'L' mode
     grayscale_image = image.convert('L')
 
-    # View original grayscale image
-    #grayscale_image.show()
-
     # Resize the PIL image to 28x28 to fit neural model
     resized_image = grayscale_image.resize((28, 28))
-    #resized_image.show()
 
     # Convert the resized PIL image back to a numpy array
     reshaped_image = np.array(resized_image)
@@ -376,7 +365,6 @@ if (
     input_data_final_float = input_data_final.astype(np.float32)
 
     processed_image = Image.fromarray(input_data_final_float)
-    #processed_image.show()
 
     drawn_image_tensor = tf.convert_to_tensor(input_data_final_float, dtype=tf.float32)
     drawn_image_tensor = tf.expand_dims(drawn_image_tensor, axis=0)
@@ -385,4 +373,4 @@ if (
     prediction_drawable = neural_net(drawn_image_tensor, is_training=False)
 
     # Display model prediction on drawable image
-    st.write(f"**_Drawable Prediction:_** {np.argmax(prediction_drawable.numpy())}")
+    st.write(f"**Prediction:_** {np.argmax(prediction_drawable.numpy())}")
