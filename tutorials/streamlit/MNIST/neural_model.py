@@ -55,10 +55,10 @@ with col3:
 num_classes = 10  # total classes (0-9 digits).
 num_features = 784  # data features (img shape: 28*28).
 
-# Initial Training parameters
+# Default training parameters
 training_steps = 500
 display_step = 100
-learning_rate = 0.1
+learning_rate = 0.001
 batch_size = 256
 
 # Form Streamlit Input
@@ -70,22 +70,23 @@ st.subheader('Training:')
 shuffle_button_state = st.session_state.get('shuffle_button_state', False)
 
 if "training" not in st.session_state:
-    st.session_state.training_steps = training_steps
+    st.session_state.training = training_steps
 
 if "display" not in st.session_state:
-    st.session_state.display_step = display_step
+    st.session_state.display = display_step
 
 if "learning" not in st.session_state:
-    st.session_state.learning_rate = learning_rate
+    st.session_state.learning= learning_rate
 
 if "batch" not in st.session_state:
-    st.session_state.batch_size = batch_size
+    st.session_state.batch = batch_size
 
 placeholder1 = st.empty()
 placeholder2 = st.empty()
 placeholder3 = st.empty()
 placeholder4 = st.empty()
 
+# Resetting the parameters
 if st.button('Reset'):
     st.session_state.training = training_steps
     st.session_state.display = display_step
@@ -93,16 +94,16 @@ if st.button('Reset'):
     st.session_state.batch = batch_size
 
 
-training_steps = placeholder1.number_input(
-    label='Training Steps: ', value=training_steps, step=50, key='training')
-display_step = placeholder2.number_input(
-    label='Display Step: ', value=display_step, step=50, key='display')
-learning_rate = placeholder3.number_input(
-    label='Learning Rate: ', format="%.3f", value=learning_rate, min_value=0.001, step=0.001, key='learning')
-batch_size = placeholder4.number_input(
-    label='Batch Size: ', value=batch_size, key='batch')
+placeholder1.number_input(
+    label='Training Steps: ', step=50, key='training')
+placeholder2.number_input(
+    label='Display Step: ', step=50, key='display')
+placeholder3.number_input(
+    label='Learning Rate: ', format="%.3f", min_value=0.000, step=0.001, key='learning')
+placeholder4.number_input(
+    label='Batch Size: ', key='batch', step = 1)
 
-# Every form must have a submit button.
+# Apply button
 if not st.button("Apply"):
     if not shuffle_button_state:
         st.stop()
@@ -238,7 +239,7 @@ def train_model(training_steps, display_step, learning_rate, batch_size):
 
 
 step_list, loss_list, acc_list, neural_net = train_model(
-    training_steps, display_step, learning_rate, batch_size)
+    st.session_state.training, st.session_state.display, st.session_state.learning, st.session_state.batch)
 
 
 
