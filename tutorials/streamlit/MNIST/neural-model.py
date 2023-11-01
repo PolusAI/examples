@@ -373,4 +373,4 @@ if (
     prediction_drawable = neural_net(drawn_image_tensor, is_training=False)
 
     # Display model prediction on drawable image
-    st.write(f"**Prediction:_** {np.argmax(prediction_drawable.numpy())}")
+    st.write(f"**Prediction:** {np.argmax(prediction_drawable.numpy())}")
