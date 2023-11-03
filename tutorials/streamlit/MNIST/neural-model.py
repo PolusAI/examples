@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import tensorflow as tf
-from PIL import Image
+from PIL import Image, ImageOps
 from tensorflow import keras
 from keras import layers, Model
 from keras.datasets import mnist
@@ -62,7 +62,7 @@ batch_size = 256
 
 # Form Streamlit Input
 
-st.subheader('Training:')
+st.subheader('Training')
 st.markdown(
 """
 MNIST default dataset parameters.
@@ -112,14 +112,14 @@ if reset_button_state:
     st.session_state.batch = batch_size
 
 
-placeholder1.number_input(
-    label='Training Steps: ', step=50, key='training')
-placeholder2.number_input(
-    label='Display Step: ', step=50, key='display')
-placeholder3.number_input(
-    label='Learning Rate: ', format="%.3f", min_value=0.000, step=0.001, key='learning')
-placeholder4.number_input(
-    label='Batch Size: ', key='batch', step = 1)
+tph = placeholder1.number_input(
+    label='Training Steps', step=50, min_value=50, max_value=10000, key='training')
+dph = placeholder2.number_input(
+    label='Display Step', step=50, min_value=0, max_value=1000, key='display')
+lph = placeholder3.number_input(
+    label='Learning Rate', format="%.3f", min_value=0.000, max_value=2.000, step=0.001, key='learning')
+bph = placeholder4.number_input(
+    label='Batch Size', key='batch', step = 1, min_value=1, max_value=1000)
 
 # Apply button
 if not apply_button_state:
@@ -233,7 +233,7 @@ def train_model(training_steps, display_step, learning_rate, batch_size):
 
 
 step_list, loss_list, acc_list, neural_net = train_model(
-    st.session_state.training, st.session_state.display, st.session_state.learning, st.session_state.batch)
+    tph, dph, lph, bph)
 
 
 
@@ -267,7 +267,7 @@ st.markdown(
 st.write("**_Test Accuracy:_** %f" % accuracy(pred, y_test))
 
 
-st.subheader('Test:')
+st.subheader('Test')
 
 # Below is markdown for Streamlit.
 st.markdown(
@@ -319,13 +319,13 @@ st.markdown(
 st.button("Shuffle Images", on_click=shuffle_images)
 
 
-st.subheader('Try It:')
+st.subheader('Try It')
 
 
 canvas = st_canvas(
     stroke_width=40, # defaults to 20
-    stroke_color="white",
-    background_color="black",
+    stroke_color="black",
+    background_color="white",
     update_streamlit=True,
     height=600,
     width =600,
@@ -344,6 +344,10 @@ if (
 
     # Will only execute below logic (for predicting the sketch) if the button was clicked
     image = Image.fromarray(x.image_data)
+
+    # Converting canvas with black stroke and white background to a canvas with white stroke and black background
+    image = image.convert('RGB')
+    image = ImageOps.invert(image)
 
     # Convert PIL image to to grayscale using 'L' mode
     grayscale_image = image.convert('L')
