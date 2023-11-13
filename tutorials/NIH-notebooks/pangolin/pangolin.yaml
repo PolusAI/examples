@@ -1,0 +1,20 @@
+name: pangolin
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - eaton-lab
+  
+dependencies:
+  - python=3.7
+  - pip=22.2.2
+  - ipykernel=6.16.0
+  - biopython==1.74
+  - sra-tools==3.0.8
+  - ipyrad==0.9.93
+  - toytree==2.0.5
+  - pangolin==4.3
+  - iqtree==2.2.5
+  - scorpio==0.3.19
+  - coincbc==2.10.10 
+  - glpk==5.0
