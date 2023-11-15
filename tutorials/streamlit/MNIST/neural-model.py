@@ -1,102 +1,130 @@
 # For Streamlit:
-
 from __future__ import absolute_import, division, print_function
 import random
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import streamlit as st
 import tensorflow as tf
-from PIL import Image
+from PIL import Image, ImageOps
 from tensorflow import keras
-from keras import Model, layers
+from keras import layers, Model
 from keras.datasets import mnist
-import io
-
+from streamlit_drawable_canvas import st_canvas
 
 # Below is markdown for Streamlit.
 st.title('Neural Network Example')
 
-st.subheader('Neural Network Example Using Streamlit Framework')
+st.subheader('Introduction')
 
-st.image(Image.open('pict/neural_network_overview.jfif'), caption='', width=400)
+# placing the image in the center.
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.write(' ')
+
+with col2:
+    st.image(Image.open('pict/neural_network_overview.jfif'), caption='', width=400)
+
+with col3:
+    st.write(' ')
+
 
 st.markdown(
     """
-    The object was to build a 2-hidden layers fully connected neural network (a.k.a multilayer perceptron) with TensorFlow.
+        The dataset utilized in the below illustration is the MNIST dataset, comprising 60,000 examples for training and an additional 10,000 examples reserved for testing. Each of these images containing handwritten digits have been size-normalized and centered within a fixed-size image of 28x28 pixels, with the pixel values ranging from 0 to 255.
 
-    This example is using a low-level approach to better understand all mechanics behind building neural networks and the training process.
-
-    You can find example used in Jupyter Notebooks here:
-    https://github.com/aymericdamien/TensorFlow-Examples/blob/master/tensorflow_v2/notebooks/3_NeuralNetworks/neural_network.ipynb
-
-    This example is using MNIST handwritten digits (picture below). The dataset contains 60,000 examples for training and 10,000 examples for testing. The digits have been size-normalized and centered in a fixed-size image (28x28 pixels) with values from 0 to 255.
-
-    In this example, each image will be converted to float32, normalized to [0, 1] and flattened to a 1-D array of 784 features (28*28).
+        In the process, every individual image undergoes a transformation, being converted to float32, and subsequently flattened into a one-dimensional array composed of 784 distinctive features—derived from the dimensions of the image (28x28).
 
     """, unsafe_allow_html=True)
 
-st.image(Image.open('pict/mnist_dataset_overview.png'), caption='')
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.write(' ')
+
+with col2:
+    st.image(Image.open('pict/mnist_dataset_overview.png'), caption='', width=400)
+
+with col3:
+    st.write(' ')
+
 
 # MNIST dataset parameters.
 num_classes = 10  # total classes (0-9 digits).
 num_features = 784  # data features (img shape: 28*28).
 
-# Initial Training parameters.
-learning_rate = 0.1
-training_steps = 2000
-batch_size = 256
+# Default training parameters
+training_steps = 500
 display_step = 100
+learning_rate = 0.001
+batch_size = 256
 
 # Form Streamlit Input
 
+st.subheader('Training')
 st.markdown(
-    """
-Default training parameters:
-
-**Learning Rate** = 0.1
-
-**Training Steps** = 2000
-
-**Batch Size** = 256
-
-**Display Step** = 100
-    """
-)
-
-# Initialize shuffle_button_state
-st.session_state.shuffle_button_state = st.session_state.shuffle_button_state if hasattr(
-    st.session_state, 'shuffle_button_state') else False
-
-with st.form("initial_params"):
-    st.markdown("**Change default parameters**")
-    training_steps = st.number_input(
-        label='Training steps: ', value=training_steps, step=50)
-    display_step = st.number_input(
-        label="Display step: ", value=display_step, step=50)
-    learning_rate = st.number_input(
-        label='learning rate: ', value=learning_rate, step=.1)
-    batch_size = st.number_input(
-        label="batch size: ", value=batch_size)
-
-    # Every form must have a submit button.
-    if not st.form_submit_button("Apply"):
-        if not st.session_state.shuffle_button_state:
-            st.stop()
-
-
-# Below is markdown for Streamlit.
-st.markdown(
-    """
-
+"""
 MNIST default dataset parameters.
 
 **Number of classes** = 10 (total classes 0-9 digits).
 
 **Number of features** = 784  (data features).
-
-    """
+"""
 )
+
+# Initialize shuffle_button_state
+shuffle_button_state = st.session_state.get('shuffle_button_state', False)
+
+if "training" not in st.session_state:
+    st.session_state.training = training_steps
+
+if "display" not in st.session_state:
+    st.session_state.display = display_step
+
+if "learning" not in st.session_state:
+    st.session_state.learning= learning_rate
+
+if "batch" not in st.session_state:
+    st.session_state.batch = batch_size
+
+st.markdown('----')
+
+placeholder1 = st.empty()
+placeholder2 = st.empty()
+placeholder3 = st.empty()
+placeholder4 = st.empty()
+
+col1, col2, col3 = st.columns([6,1,1])
+
+with col2:
+    reset_button_state = st.button('Reset')
+with col3:
+    apply_button_state = st.button('Apply', type="primary")
+
+st.markdown('----')
+
+# Resetting the parameters
+if reset_button_state:
+    st.session_state.training = training_steps
+    st.session_state.display = display_step
+    st.session_state.learning = learning_rate
+    st.session_state.batch = batch_size
+
+
+tph = placeholder1.number_input(
+    label='Training Steps', step=50, min_value=50, max_value=10000, key='training')
+dph = placeholder2.number_input(
+    label='Display Step', step=50, min_value=0, max_value=1000, key='display')
+lph = placeholder3.number_input(
+    label='Learning Rate', format="%.3f", min_value=0.000, max_value=2.000, step=0.001, key='learning')
+bph = placeholder4.number_input(
+    label='Batch Size', key='batch', step = 1, min_value=1, max_value=1000)
+
+# Apply button
+if not apply_button_state:
+    if not shuffle_button_state:
+        st.stop()
 
 
 # Network parameters.
@@ -110,15 +138,14 @@ x_train, x_test = np.array(x_train, np.float32), np.array(x_test, np.float32)
 # Flatten images to 1-D vector of 784 features (28*28).
 x_train, x_test = x_train.reshape(
     [-1, num_features]), x_test.reshape([-1, num_features])
-# Normalize images value from [0, 255] to [0, 1].
-x_train, x_test = x_train / 255., x_test / 255.
+
 # Use tf.data API to shuffle and batch data.
 train_data = tf.data.Dataset.from_tensor_slices((x_train, y_train))
 train_data = train_data.repeat().shuffle(5000).batch(batch_size).prefetch(1)
 
-
 # Create TF Model.
 # NeuralNet class is based on Keras Model class
+@keras.utils.register_keras_serializable()
 class NeuralNet(Model):
     # Set layers.
     def __init__(self):
@@ -147,7 +174,6 @@ neural_net = NeuralNet()
 # Cross-Entropy Loss.
 # Note that this will apply 'softmax' to the logits.
 
-
 def cross_entropy_loss(x, y):
     # Convert labels to int 64 for tf cross-entropy function.
     y = tf.cast(y, tf.int64)
@@ -156,9 +182,7 @@ def cross_entropy_loss(x, y):
     # Average loss across the batch.
     return tf.reduce_mean(loss)
 
-# Accuracy metric.
-
-
+# Accuracy metric
 def accuracy(y_pred, y_true):
     # Predicted class is the index of highest score in prediction vector (i.e. argmax).
     correct_prediction = tf.equal(
@@ -167,9 +191,8 @@ def accuracy(y_pred, y_true):
 
 
 # Stochastic gradient descent optimizer.
-optimizer = tf.optimizers.SGD(learning_rate)
+optimizer = tf.optimizers.Adam(learning_rate)
 # Optimization process.
-
 
 def run_optimization(x, y):
     # Wrap computation inside a GradientTape for automatic differentiation.
@@ -188,17 +211,7 @@ def run_optimization(x, y):
     # Update W and b following gradients.
     optimizer.apply_gradients(zip(gradients, trainable_variables))
 
-
-# Run training for the given number of steps.
-st.markdown(
-    """
-
-    **_The results below are for the training that was ran for the given number of steps._**
-
-    """, unsafe_allow_html=True)
-
-
-@st.experimental_singleton
+@st.cache_resource
 def train_model(training_steps, display_step, learning_rate, batch_size):
     step_list = []
     loss_list = []
@@ -220,7 +233,9 @@ def train_model(training_steps, display_step, learning_rate, batch_size):
 
 
 step_list, loss_list, acc_list, neural_net = train_model(
-    training_steps, display_step, learning_rate, batch_size)
+    tph, dph, lph, bph)
+
+
 
 df = pd.DataFrame(
     data={"Step": step_list, "Loss": loss_list, "Accuracy": acc_list}
@@ -239,64 +254,127 @@ st.markdown(hide_table_row_index, unsafe_allow_html=True)
 
 st.table(df)
 
-# Test model on validation set.
+# Test model on test set.
 pred = neural_net(x_test, is_training=False)
 
 # Below is markdown for Streamlit.
 st.markdown(
     """
-    Test model on validation set.
-
-    **_Test Accuracy:_**
+    Now testing model on test set.  
 
     """, unsafe_allow_html=True)
 
-st.write("Test Accuracy: %f" % accuracy(pred, y_test))
+st.write("**_Test Accuracy:_** %f" % accuracy(pred, y_test))
 
-# Visualize predictions.
-# Predict and provide 5 random images from data set.
+
+st.subheader('Test')
+
+# Below is markdown for Streamlit.
+st.markdown(
+    """
+    **_Test image predictions are displayed below:_**
+    """, unsafe_allow_html=True)
+
 n_images = 5
-
+test_images = x_test[:n_images]
+#predictions = neural_net(test_images)
 
 def shuffle_images():
     st.session_state.shuffle_button_state = True
     st.session_state.test_images = []
+    st.session_state.test_labels = []
     for i in range(n_images):
         rand_index = random.randint(0, len(x_test)-1)
         st.session_state.test_images.append(x_test[rand_index])
+        st.session_state.test_labels.append(y_test[rand_index])
     st.session_state.test_images = np.array(st.session_state.test_images)
-
+    st.session_state.test_labels = np.array(st.session_state.test_labels)
 
 if (not hasattr(st.session_state, 'test_images')):
     shuffle_images()
 
 predictions = neural_net(st.session_state.test_images)
 
-# Below is markdown for Streamlit.
-st.markdown(
-    """
-       **_Model and image predictions are displayed below._**
-    """, unsafe_allow_html=True)
-
-# Display image and model prediction.
-for i in range(n_images):
-    plt.imshow(np.reshape(
-        st.session_state.test_images[i], [28, 28]), cmap='gray')
-
-    with io.BytesIO() as img_buf:
-        plt.savefig(img_buf, format='png')
-        st.image(img_buf, width=200)
-
-    st.write("Model prediction: %i" % np.argmax(predictions.numpy()[i]))
+columns = st.columns(n_images+1)
+columns[0].write("**Image:**")
+columns[0].write("**Label:**")
+columns[0].write("**Prediction:**")
+for i, col in enumerate(columns[1:]):
+    col.image(np.reshape(st.session_state.test_images[i], [28, 28]) / 255.)
+    col.write(st.session_state.test_labels[i])
+    col.write(np.argmax(predictions.numpy()[i]))
 
 
 st.markdown(
     """
-   
-   ***If you want to reshuffle images, click the button below.***
+
+
+***If you want to reshuffle images, click the button below.***
+
 
     """
 )
 
 # Button Widget in Streamlit
 st.button("Shuffle Images", on_click=shuffle_images)
+
+
+st.subheader('Try It')
+
+
+canvas = st_canvas(
+    stroke_width=40, # defaults to 20
+    stroke_color="black",
+    background_color="white",
+    update_streamlit=True,
+    height=600,
+    width =600,
+    drawing_mode="freedraw",
+    key="canvas",
+)
+
+
+if (
+    canvas.json_data is not None
+    and len(canvas.json_data["objects"]) != 0
+):
+    if 'canvas' in st.session_state:
+        x = canvas
+    # x is a numpy array 
+
+    # Will only execute below logic (for predicting the sketch) if the button was clicked
+    image = Image.fromarray(x.image_data)
+
+    # Converting canvas with black stroke and white background to a canvas with white stroke and black background
+    image = image.convert('RGB')
+    image = ImageOps.invert(image)
+
+    # Convert PIL image to to grayscale using 'L' mode
+    grayscale_image = image.convert('L')
+
+    # Resize the PIL image to 28x28 to fit neural model
+    resized_image = grayscale_image.resize((28, 28))
+
+    # Convert the resized PIL image back to a numpy array
+    reshaped_image = np.array(resized_image)
+
+    # Flatten the image to have a shape of (784,)
+    flattened_image = reshaped_image.reshape(784)
+
+    # Adding extra dimnesion to the input image
+    input_data = flattened_image.reshape(-1, 1)
+
+    input_data_final = np.squeeze(input_data)
+
+    input_data_final_float = input_data_final.astype(np.float32)
+
+    processed_image = Image.fromarray(input_data_final_float)
+
+    drawn_image_tensor = tf.convert_to_tensor(input_data_final_float, dtype=tf.float32)
+    drawn_image_tensor = tf.expand_dims(drawn_image_tensor, axis=0)
+
+
+    prediction_drawable = neural_net(drawn_image_tensor, is_training=False)
+
+    # Display model prediction on drawable image
+    st.write(f"**Prediction:** {np.argmax(prediction_drawable.numpy())}")
