@@ -1,0 +1,25 @@
+### list of packages installed into new virtual environment
+### python -m venv af2
+
+### conda install
+git
+
+### pip install the following
+ipywidgets==7.7.1
+ipyfilechooser
+ipykernel
+alphafold-colabfold
+colabfold @ git+https://github.com/sokrypton/ColabFold@36afbad707ea7401982e24c1cddd05e03c55c001
+
+### ensure jax and jaxlib get downgraded to the following versions
+jax==0.4.13
+jaxlib==0.4.13
+
+### conda install -c conda-forge
+openmm==7.7.0
+pdbfixer
+
+### conda install -c bioconda
+kalign2
+hhsuite
+
