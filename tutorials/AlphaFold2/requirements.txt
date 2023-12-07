@@ -1,5 +1,4 @@
-### list of packages installed into new virtual environment
-### python -m venv af2
+### list of packages installed into new environment
 
 ### conda install
 git
@@ -11,9 +10,9 @@ ipykernel
 alphafold-colabfold
 colabfold @ git+https://github.com/sokrypton/ColabFold@36afbad707ea7401982e24c1cddd05e03c55c001
 
-### ensure jax and jaxlib get downgraded to the following versions
-jax==0.4.13
-jaxlib==0.4.13
+### ensure jax and jaxlib get installed using the following line
+### these packages MUST be version 0.4.13
+pip install --upgrade jax==0.4.13 jaxlib==0.4.13+cuda12.cudnn89 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
 ### conda install -c conda-forge
 openmm==7.7.0
