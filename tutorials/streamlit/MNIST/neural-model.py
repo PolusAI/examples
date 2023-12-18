@@ -1,32 +1,27 @@
-# For Streamlit:
 from __future__ import absolute_import, division, print_function
+import os
 import random
+import streamlit as st
+from streamlit_javascript import st_javascript
+from streamlit_drawable_canvas import st_canvas
 import numpy as np
 import pandas as pd
-import streamlit as st
 import tensorflow as tf
 from PIL import Image, ImageOps
 from tensorflow import keras
 from keras import layers, Model
 from keras.datasets import mnist
-from streamlit_drawable_canvas import st_canvas
+
+dashboard_folder = os.path.dirname(os.getenv("DASHBOARD_PATH"))
+device_used = 'GPU' if len(tf.config.list_logical_devices('GPU'))>0 else 'CPU'
+st_theme = st_javascript("""window.getComputedStyle(window.parent.document.getElementsByClassName("stApp")[0]).getPropertyValue("color-scheme")""")
 
 # Below is markdown for Streamlit.
 st.title('Neural Network Example')
 
 st.subheader('Introduction')
-
-# placing the image in the center.
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.write(' ')
-
-with col2:
-    st.image(Image.open('pict/neural_network_overview.jfif'), caption='', width=400)
-
-with col3:
-    st.write(' ')
+    
+st.columns(4)[1].image(dashboard_folder + '/pict/neural_network_overview.jfif', caption='', width=400)
 
 
 st.markdown(
@@ -38,16 +33,7 @@ st.markdown(
     """, unsafe_allow_html=True)
 
 
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.write(' ')
-
-with col2:
-    st.image(Image.open('pict/mnist_dataset_overview.png'), caption='', width=400)
-
-with col3:
-    st.write(' ')
+st.columns(4)[1].image(dashboard_folder + '/pict/mnist_dataset_overview.png', caption='', width=400)
 
 
 # MNIST dataset parameters.
@@ -115,7 +101,7 @@ if reset_button_state:
 tph = placeholder1.number_input(
     label='Training Steps', step=50, min_value=50, max_value=10000, key='training')
 dph = placeholder2.number_input(
-    label='Display Step', step=50, min_value=0, max_value=1000, key='display')
+    label='Display Step', step=50, min_value=1, max_value=1000, key='display')
 lph = placeholder3.number_input(
     label='Learning Rate', format="%.3f", min_value=0.000, max_value=2.000, step=0.001, key='learning')
 bph = placeholder4.number_input(
@@ -211,7 +197,7 @@ def run_optimization(x, y):
     # Update W and b following gradients.
     optimizer.apply_gradients(zip(gradients, trainable_variables))
 
-@st.cache_resource
+@st.cache_resource(show_spinner=f"Training Neural Network on {device_used}...")
 def train_model(training_steps, display_step, learning_rate, batch_size):
     step_list = []
     loss_list = []
@@ -229,11 +215,11 @@ def train_model(training_steps, display_step, learning_rate, batch_size):
             step_list.append(step)
             loss_list.append(loss)
             acc_list.append(acc)
+    st.success('Done!')
+
     return step_list, loss_list, acc_list, neural_net
 
-
-step_list, loss_list, acc_list, neural_net = train_model(
-    tph, dph, lph, bph)
+step_list, loss_list, acc_list, neural_net = train_model(tph, dph, lph, bph)
 
 
 
@@ -321,11 +307,19 @@ st.button("Shuffle Images", on_click=shuffle_images)
 
 st.subheader('Try It')
 
+if st_theme == "dark":
+    canvas_stroke_color="white",
+    canvas_background_color="rgba(14, 17, 23, 1)",
+    canvas_invert = False
+else:
+    canvas_stroke_color="black",
+    canvas_background_color="white",
+    canvas_invert = True
 
 canvas = st_canvas(
     stroke_width=40, # defaults to 20
-    stroke_color="black",
-    background_color="white",
+    stroke_color=canvas_stroke_color,
+    background_color=canvas_background_color,
     update_streamlit=True,
     height=600,
     width =600,
@@ -347,7 +341,8 @@ if (
 
     # Converting canvas with black stroke and white background to a canvas with white stroke and black background
     image = image.convert('RGB')
-    image = ImageOps.invert(image)
+    if canvas_invert:
+        image = ImageOps.invert(image)
 
     # Convert PIL image to to grayscale using 'L' mode
     grayscale_image = image.convert('L')
