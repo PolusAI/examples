@@ -1,0 +1,24 @@
+### list of packages installed into new environment
+
+### conda install
+git
+
+### pip install the following
+ipywidgets==7.7.1
+ipyfilechooser
+ipykernel
+alphafold-colabfold
+colabfold @ git+https://github.com/sokrypton/ColabFold@36afbad707ea7401982e24c1cddd05e03c55c001
+
+### ensure jax and jaxlib get installed using the following line
+### these packages MUST be version 0.4.13
+pip install --upgrade jax==0.4.13 jaxlib==0.4.13+cuda12.cudnn89 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
+### conda install -c conda-forge
+openmm==7.7.0
+pdbfixer
+
+### conda install -c bioconda
+kalign2
+hhsuite
+
